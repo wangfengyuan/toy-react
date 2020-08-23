@@ -1,0 +1,30 @@
+{
+  "name": "toy-react",
+  "version": "1.0.0",
+  "description": "构建一个简单的react库",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangfengyuan/toy-react.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wangfengyuan/toy-react/issues"
+  },
+  "homepage": "https://github.com/wangfengyuan/toy-react#readme",
+  "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "area-data": "^5.0.6",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "babel-loader": "^8.1.0"
+  }
+}
