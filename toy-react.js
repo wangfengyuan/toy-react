@@ -13,6 +13,9 @@ export class Component {
     setAttribute(name, value) {
         this.props[name] = value;
     }
+    get vchildren() {
+        return this.children.map((child) = child.vdom)
+    }
     get vdom() {
         return this.render().vdom;
     }
@@ -63,11 +66,14 @@ export class ElementWrapper extends Component {
         this.root = document.createElement(type)
     }
     get vdom() {
-        return {
+        return this;
+        /*
+        {
             type: this.type,
             props: this.props,
             children: this.children.map((child) => child.vdom)
         }
+        */
     }
     /*
     appendChild(component) {
@@ -88,14 +94,35 @@ export class ElementWrapper extends Component {
     */
     [RENDER_TO_DOM](range) {
         range.deleteContents();
-        range.insertNode(this.root);
+        const root = document.createElement(this.type);
+
+        for(const name in this.props) {
+            const value = this.props[name]
+            if (name.match(/^on([\s\S]+)/)) {
+                root.addEventListener(RegExp.$1.replace(/^[\s\S]/, c => c.toLowerCase()), value);
+            } else if (name === 'className') {
+                root.setAttribute('class', value)
+            } else {
+                root.setAttribute(name, value)
+            }
+        }
+        
+        for(const child of this.children) {
+            const childrange = document.createRange();
+            childrange.setStart(root, root.childNodes.length);
+            childrange.setEnd(root, root.childNodes.length);
+            child[RENDER_TO_DOM](childrange);
+        }
+        console.log('root', root);
+        range.insertNode(root);
     }
 }
 
 export class TextWrapper extends Component {
     constructor(content) {
         super(content);
-        this.content = content
+        this.type = '#text',
+        this.content = content,
         this.root = document.createTextNode(content);
     }
     [RENDER_TO_DOM](range) {
@@ -103,17 +130,14 @@ export class TextWrapper extends Component {
         range.insertNode(this.root);
     }
     get vdom() {
-        return {
+        return this;
+        /*{
             type: '#text',
             content: this.content
         }
+        */
     }
 }
-
-
-
-
-
 
 export function createElement(type, attrs, ...children) {
     let e;
